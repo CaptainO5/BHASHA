@@ -87,12 +87,12 @@ else:
         
         inputs, targets = data_utils.separate_inputs_targets(translator_datamodule.test_df)
         preds = []
-        for batch in translator_datamodule.test_dataloader():
-            input_ids, attention_masks = batch['input_ids'].to(device), batch['attention_mask'].to(device)
+        for input_ in inputs:
+            # input_ids, attention_masks = batch['input_ids'].to(device), batch['attention_mask'].to(device)
             with torch.no_grad():
-                output_ids = translator_model.generate(input_ids, attention_masks)
+                output_ids = translator_model.generate(**translator_tokenizer([input_], return_tensors='pt').to(device))
             preds.extend(translator_tokenizer.batch_decode(output_ids, skip_special_tokens=True, clean_up_tokenization_spaces=True))
-        # print(metrics.bleu_score(preds, targets))
-        # print(metrics.rouge_scores(preds, targets))
+        print('bleu:', metrics.bleu_score(preds, targets))
+        print('rouge:', metrics.rouge_scores(preds, targets))
         
     # translator_trainer.test(model=translator_model, datamodule=translator_datamodule, ckpt_path='/blue/cai6307/n.kolla/finetune_ckpts/translatorsv2/val_loss=2.754_epoch=7_step=752_model=mbart-large-50-one-to-many-mmt.ckpt')

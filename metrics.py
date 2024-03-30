@@ -16,7 +16,7 @@ def rouge_scores(predictions, references):
 
 def pinc_score(predictions, sources):
     """
-    Calculate how deviant predictions are from the sources
+    Measure how deviant predictions are from the sources
     
     Based on the PINC score defined in https://www.cs.utexas.edu/users/ml/papers/chen.acl11.pdf
     """

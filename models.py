@@ -18,8 +18,8 @@ class Model(pl.LightningModule):
         output = self.model(**batch)
         return output
     
-    def generate(self, input_ids, attention_mask):
-        return self.model.generate(input_ids, attention_mask=attention_mask)
+    def generate(self, input_ids, attention_mask, max_length=128):
+        return self.model.generate(input_ids, attention_mask=attention_mask, max_length=max_length)
     
     def _step(self, batch, idx):
         output = self(batch)
@@ -43,5 +43,3 @@ class Model(pl.LightningModule):
 
     def configure_optimizers(self):
         return AdamW(self.parameters(), lr=self.lr)
-
-# TODO Explore PEFT techniques

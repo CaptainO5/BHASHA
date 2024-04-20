@@ -15,14 +15,16 @@ torch.set_float32_matmul_precision('medium')
 
 pl.seed_everything(42, workers=True)
 
-data = pd.read_excel('/blue/cai6307/n.kolla/data/PreFinalTranslation.xlsx', names=['sarcasm', 'interpretation', 'translation'])
+data = pd.read_excel('/blue/cai6307/n.kolla/data/Translation.xlsx', names=['sarcasm', 'interpretation', 'translation'])
+
 translator_data = pd.DataFrame()
 
 translator_input_prefix = 'interpret sarcasm and translate English to Telugu: ' # Needed as the models are pretrained for multiple tasks
 translator_data['inputs'] = data.sarcasm.apply(lambda text: data_utils.preprocess(text, translator_input_prefix))
 translator_data['targets'] = data.translation.apply(data_utils.preprocess)
 
-translator_model_name = 'facebook/mbart-large-50-one-to-many-mmt' #TODO get from the command-line
+translator_model_name = 'facebook/mbart-large-50-one-to-many-mmt'
+evaluate = True
 
 translator_tokenizer = AutoTokenizer.from_pretrained(translator_model_name, model_max_length=512)
 
@@ -34,8 +36,6 @@ translator_collator = DataCollatorForSeq2Seq(tokenizer=translator_tokenizer, mod
 
 translator_datamodule = SarcasmDataModule(translator_data, translator_tokenizer, translator_collator)
 
-evaluate = True #TODO get from the command-line
-
 if not evaluate:
     translator_model = Model(translator_model_name, lr=1e-5)
 
@@ -46,7 +46,7 @@ if not evaluate:
     )
 
     translator_checkpoint = ModelCheckpoint(
-        dirpath='/blue/cai6307/n.kolla/finetune_ckpts/translatorsv2', # TODO make it a config variable
+        dirpath='/blue/cai6307/n.kolla/finetune_ckpts/translatorsv2',
         filename='{val_loss:.3f}_{epoch}_{step}_model=' + translator_model_name.split("/")[-1],
         monitor='val_loss',
         mode='min',
@@ -88,11 +88,16 @@ else:
         inputs, targets = data_utils.separate_inputs_targets(translator_datamodule.test_df)
         preds = []
         for input_ in inputs:
-            # input_ids, attention_masks = batch['input_ids'].to(device), batch['attention_mask'].to(device)
             with torch.no_grad():
                 output_ids = translator_model.generate(**translator_tokenizer([input_], return_tensors='pt').to(device))
             preds.extend(translator_tokenizer.batch_decode(output_ids, skip_special_tokens=True, clean_up_tokenization_spaces=True))
+        
+        save_model_name = translator_model_name.split("/")[-1] + "v2"
+        data_utils.save_tests(inputs, preds, save_model_name)
+        
+        # Use pretrained tokenizer for telugu evaluation
+        preds = [data_utils.custom_tokenize(pred, translator_tokenizer) for pred in preds]
+        targets = [[data_utils.custom_tokenize(target_text, translator_tokenizer) for target_text in target] for target in targets]
+        
         print('bleu:', metrics.bleu_score(preds, targets))
         print('rouge:', metrics.rouge_scores(preds, targets))
-        
-    # translator_trainer.test(model=translator_model, datamodule=translator_datamodule, ckpt_path='/blue/cai6307/n.kolla/finetune_ckpts/translatorsv2/val_loss=2.754_epoch=7_step=752_model=mbart-large-50-one-to-many-mmt.ckpt')

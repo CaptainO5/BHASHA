@@ -1,7 +1,7 @@
 import evaluate
 import nltk
 import numpy as np
-# nltk.download('punkt')
+nltk.download('punkt')
 
 from nltk.tokenize import word_tokenize
 from nltk import ngrams
@@ -16,11 +16,11 @@ def rouge_scores(predictions, references):
 
 def pinc_score(predictions, sources):
     """
-    Measure how deviant predictions are from the sources
+    Calculate how deviant predictions are from the sources
     
     Based on the PINC score defined in https://www.cs.utexas.edu/users/ml/papers/chen.acl11.pdf
     """
-    assert len(predictions) == len(sources), "Predictions and sorces must be of same length"
+    assert len(predictions) == len(sources), "predictions and sources must be of same length"
     
     N = 4 # Maximum n-grams
     

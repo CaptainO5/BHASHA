@@ -1,5 +1,4 @@
 # **BHASHA: Achieving Sarcasm Interpreted Translation**
----
 
 ## **1. Introduction**
 

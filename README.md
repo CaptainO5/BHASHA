@@ -33,10 +33,10 @@ Ultimately, by integrating sarcasm interpretation into machine translation, we a
 - Enhance model performance in handling **complex language features**
 
 #### Figure 1: Current Translation Experience  
-![Current](https://github.com/user-attachments/assets/b61b6de0-6e46-48cd-8891-e11e6ee4e7ed)
+![Current](https://github.com/user-attachments/assets/cf9e91fa-5c32-40d5-8ef2-cdae12c5391a)
 
 #### Figure 2: Target Translation Experience  
-![TargetExperience](https://github.com/user-attachments/assets/93a98169-931c-4d99-aeef-1c1dcd7ddb57)
+![TargetExperience](https://github.com/user-attachments/assets/2527c9be-19cd-40b3-b3b1-34c415c2dea4)
 
 ---
 
@@ -159,8 +159,8 @@ We used **HuggingFace pre-trained models**:
   - `facebook/mbart-*`
 
 #### Figure 3: Two-Pipelines Approach
+![Pipelines](https://github.com/user-attachments/assets/dbe8585b-5306-4881-86c3-87dc1623e259)
 
-![Pipelines](https://github.com/user-attachments/assets/68c4a310-eb3b-4743-b76a-f989c2135dca)
 
 #### Training Details:
 
@@ -237,7 +237,7 @@ In **Table 1**, we compare our fine-tuned models with **SIGN** [(Peled and Reich
 
 In **Table 2**, we report BLEU and ROUGE scores for both pipelines.
 
-![image](https://github.com/user-attachments/assets/5384ecca-e2be-4da9-b40a-f89f1aeecf55)
+![Screenshot 2025-03-30 005600](https://github.com/user-attachments/assets/96d74fe4-c514-48f0-a057-ac28fcd95578)
 
 > **Pipeline A** clearly outperforms direct translation (**Pipeline B**), especially in **BLEU score** (35.80 vs 31.69).
 
@@ -253,8 +253,8 @@ In **Table 2**, we report BLEU and ROUGE scores for both pipelines.
 
 
 ### **Figure 4: Human Evaluation Samples**
+![Screenshot 2024-04-22 at 15 05 30](https://github.com/user-attachments/assets/484f81a4-13c3-41a6-b7b7-35a0bcbfb7d7)
 
-![Screenshot 2024-04-22 at 15 05 30](https://github.com/user-attachments/assets/5ceb63a0-d336-4b5f-a08f-ddd787585146)
 
 
 Two **high-rated** and two **low-rated** samples are shown, illustrating how **sentence length** and **punctuation** affected translation quality.
